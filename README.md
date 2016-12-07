@@ -10,7 +10,7 @@
 
 * Order variables and methods alphabetically when possible.
 
-* Use 2 space indentation (no tabs) unless otherwise noted.
+* Use 2 space indentation.
 
 * Do not make any spalling mistakes or grammar mistakes. Use proper english words.
 
@@ -52,7 +52,7 @@
   with some front-awesome style and this same button needs in more than one places, then write 
   it inside a helper method and then call it from view and pass link path.
   
-  ```ruby
+  ```erb
   # bad
   # index.html.erb
   <%= link_to ('<i class="fa fa-trash" title="Delete Details"></i> Delete').html_safe, 
@@ -67,7 +67,7 @@
                 method: :delete,
                 data: { confirm: "Are you sure?" }, 
                 class: 'btn btn-danger btn-sm' %>
-                
+                       
   # good
   # helper.rb
   def delete_link(path)
@@ -84,6 +84,30 @@
   # show.html.erb
   <%= delete_link(employee_path(@employee)) %>
   ```
+
+## git
+
+* Write a good commit message with story number(if present).
+
+  ```
+  [#102] Update scope for unattach items
+  ```
+
+* Remove buffer file during commit your changes.
+
+* Create different branch for different story and Each branch should contain maximum 2 commit messages.
+
+* Create Pull Request only after finish the task competely of a particular story.
+
+* Do not change anything in master branch, always create seperate branch.
+
+* Rebase frequently to incorporate upstream changes.
+
+* If any branch merge with master branch, then delete that branch from local as well as master.
+
+* Before creating Pull Request review code yourself once.
+
+* Use `gitk` to see the changes from local machine
 
 ## Bundler
 
