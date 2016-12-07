@@ -84,6 +84,9 @@
   # show.html.erb
   <%= delete_link(employee_path(@employee)) %>
   ```
+* Name of the helper(or variable/funcation/scope) should reflect its purpose.
+
+* Try to avoid comment messages unless the code is too complicated.
 
 ## git
 
@@ -108,6 +111,10 @@
 * Before creating Pull Request review code yourself once.
 
 * Use `gitk` to see the changes from local machine
+
+* Do not upload credentials files or any secret file in git, add them in `.gitignore`
+
+* Always create new branch from master.
 
 ## Bundler
 
@@ -139,9 +146,6 @@
 
 * Keep the `schema.rb` under version control and arrange it well, so that it clearly understandable.
 
-* Use `rake db:schema:load` instead of `rake db:migrate` to initialize an empty
-  database.
-
 * Add database level validation as well model level validation
 
 * Enforce foreign-key constraints.
@@ -167,7 +171,13 @@
     end
   end
   ```
+
+* If you are writing something within `up` migration, write it in the reverse order within
+  `down` migration if needed.
   
+* After migrating a migration use `rollback` command to check whether the database can
+  return to its previous state or not.
+
 ## Routing
 
 * When you need to add more actions use `member` and `collection` routes.
@@ -229,7 +239,7 @@
     resources :comments
   end
   ```
-* Skip unnecessary routes if those routes are not using `except/only`
+* Left unnecessary routes if those routes are not used. Use `except/only` for the purpose.
   
   ```ruby
   resources :users, except: [:show]
