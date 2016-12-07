@@ -1,5 +1,90 @@
 # Coding standard
 
+## Programming
+
+* Write DRY code during development any project.
+
+* Use spaces around operators, after commas, colons and semicolons, around `{` and before `}`.
+
+* No spaces after `(`, `[` No spaces before `]`, `)`
+
+* Order variables and methods alphabetically when possible.
+
+* Use 2 space indentation (no tabs) unless otherwise noted.
+
+* Do not make any spalling mistakes or grammar mistakes. Use proper english words.
+
+* put space if needs. like- `<% if current_user %>`(correct) `<%if current_user%>`(wrong).
+ Another example: `"hello"` (correct) `" hello "` (wrong)
+ 
+* Use valid syntax. If you are using rails 5 version, then follow rails 5 syntax. 
+  Example: don't use `=>` like- `(:presence => true)`, use `(presence: true)`
+  
+* Don't use an empty line at the beginning or end of methods, blocks or conditionals. 
+  Use an empty line between methods, blocks and conditionals.
+  
+  ```ruby
+  # bad
+  def hello
+  
+    puts "Hello world"
+  end
+  
+  # good
+  def hello
+    puts "Hello world"
+  end
+  
+  # bad
+  [2, 3, 4].map{ |x| x + 2 }
+  if array.empty?
+    # do some thing
+  end
+  
+  # good
+  [2, 3, 4].map{ |x| x + 2 }
+  
+  if array.empty?
+    # do some thing
+  end
+  ```
+* Do not repeat same code, write it inside helper. Example: suppose you are styling a button 
+  with some front-awesome style and this same button needs in more than one places, then write 
+  it inside a helper method and then call it from view and pass link path.
+  
+  ```ruby
+  # bad
+  # index.html.erb
+  <%= link_to ('<i class="fa fa-trash" title="Delete Details"></i> Delete').html_safe, 
+                employee_path(employee), 
+                method: :delete,
+                data: { confirm: "Are you sure?" }, 
+                class: 'btn btn-danger btn-sm' %>
+                
+  # show.html.erb
+  <%= link_to ('<i class="fa fa-trash" title="Delete Details"></i> Delete').html_safe, 
+                employee_path(@employee), 
+                method: :delete,
+                data: { confirm: "Are you sure?" }, 
+                class: 'btn btn-danger btn-sm' %>
+                
+  # good
+  # helper.rb
+  def delete_link(path)
+    link_to ('<i class="fa fa-trash" title="Delete Details"></i> Delete').html_safe, 
+              path,
+              method: :delete,
+              data: { confirm: "Are you sure?" }, 
+              class: 'btn btn-danger btn-sm'
+  end
+  
+  # index.html.erb
+  <%= delete_link(employee_path(employee)) %>
+  
+  # show.html.erb
+  <%= delete_link(employee_path(@employee)) %>
+  ```
+
 ## Bundler
 
 * Put gems in alphabetical order in the Gemfile.
@@ -160,3 +245,56 @@
   end
   ```
   
+* If `current_user` exists in browser, then don't need to hit database every time you need
+  `curent_user`.
+  ```ruby
+  #bad
+  def current_user
+    @current_user = User.find(session[:user_id]) if session[:user_id]
+  end
+  
+  #good
+  def current_user
+    @current_user ||= User.find(session[:user_id]) if session[:user_id]
+  end
+  ```
+* Remove n + 1 query problem from all places in your project.
+  
+## Model
+
+* Write your model simple and well formated. 
+  Group same type of method. Follow this coding pattern for model.
+  ```ruby
+  class Issue < ActiveRecord::Base
+    enum priority: [:high, :medium, :low, :as_soon_as_possible]
+    
+    belongs_to :item, optional: true
+    belongs_to :system, optional: true     
+    
+    has_many :resolution, optional: true    
+
+    validates :title, presence: true       
+    validate  :item_or_system_presence
+    validate  :item_closed_at_limitation
+    validate  :system_closed_at_limitation
+
+    scope :order_desending, -> { order('created_at DESC') }
+    scope :unclosed,        -> { where(closed_at: nil) }
+
+    def item_or_system_presence
+      unless [item, system].any?
+        errors.add :base, 'Item / System must be present!'
+      end
+    end
+  end
+  ```
+  
+* Generate model from terminal. Do not create `model.rb` and migration your own, let
+  rails to do it for you.
+  
+  ```
+  rails generate model Item name:string description:text
+  ```
+  
+* Choose a proper name for methods, scopes etc.
+
